@@ -1,6 +1,6 @@
 from unittest import TestCase
-from ssp_9081.ssp_9081_interfaces import SSP_9081_Serial
-from ssp_9081 import SSP_9081
+from ssp_9081.interfaces import SSP_9081_Serial
+from ssp_9081 import SSP_9081, SequenceItem
 from time import sleep
 
 class TestSSP_9081_Serial(TestCase):
@@ -32,5 +32,28 @@ class TestSSP_9081_Serial(TestCase):
         sleep(5)
         self.assertGreaterEqual(self.cut.getU(), 4.5)
         self.assertGreaterEqual(self.cut.getU(), 4.5)
+
+    def test_set_waveform(self):
+        # self.assertTrue(self.cut.getOut())
+        self.assertFalse(self.cut.waveForm.isRunning())
+        self.cut.waveForm.setCycleNumber(1)
+        self.cut.waveForm.setPointsToRun(6)
+        self.cut.waveForm.setStep(SequenceItem(1, 11., 5))
+        self.cut.waveForm.setStep(SequenceItem(2, 11., 0))
+        self.cut.waveForm.setStep(SequenceItem(3, 4., 5))
+        self.cut.waveForm.setStep(SequenceItem(4, 4., 0))
+        self.cut.waveForm.setStep(SequenceItem(5, 12., 5))
+        self.cut.waveForm.setStep(SequenceItem(6, 12., 0))
+        self.cut.setOut(True)
+        self.cut.waveForm.start()
+        sleep(3)
+        self.assertAlmostEqual(11., self.cut.getU(), delta=0.5 )
+        sleep(5)
+        self.assertAlmostEqual(4., self.cut.getU(), delta=0.5)
+        sleep(5)
+        self.assertAlmostEqual(12., self.cut.getU(), delta=0.5)
+        self.assertTrue(self.cut.waveForm.isRunning())
+        sleep(6)
+        self.assertFalse(self.cut.waveForm.isRunning())
 
 

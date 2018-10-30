@@ -1,46 +1,7 @@
 from serial import Serial
 from time import sleep
-from ssp_9081.ssp_9081_interfaces import SSP_9081_INTERFACE
+from ssp_9081.interfaces import SSP_9081_INTERFACE
 import logging
-
-
-class SequenceItem():
-    """
-    Waveform point description:
-    number: point (1-10)
-    voltage
-    time: amount of seconds this point will be held
-    """
-    def __init__(self, number:int, voltage:float, time:int):
-        """
-        :param number: 1-10
-        :param voltage: 0.0 - 36.40V
-        :param time: 0s - 1200s
-        """
-        self.number = number
-        self.voltage = voltage #V
-        self.time = time #s
-
-    @classmethod
-    def from_resp(cls, number, resp):
-        res = resp.split(';')
-        return SequenceItem(number, res[0]/100, res[1])
-
-    def to_cmd(self):
-        return "SWFP{:02}{:04}{:04}".format(
-            self.number,
-            int(self.voltage*100),
-            int(self.time)
-        )
-
-    @classmethod
-    def from_csv(cls, line):
-        res = line.split(';')
-        return SequenceItem(int(res[0]), float(res[1]), int(res[2]))
-
-    def to_csv(self):
-        return "{};{:.2f};{}".format(self.number, self.voltage, self.time)
-
 
 
 class SSP_9081_Exception(Exception):
@@ -237,7 +198,7 @@ class SSP_9081():
                 raise SSP_9081_Exception("no response")
             return int(resp)
 
-        def setStep(self, seqItem: SequenceItem):
+        def setStep(self, seqItem: 'SequenceItem'):
             assert seqItem.number > 0 and seqItem.number <= 10, "point can be in range [1 - 10]"
             cmd = seqItem.to_cmd()
             return self.control.send(cmd)
@@ -260,5 +221,43 @@ class SSP_9081():
 
         def stop(self):
             return self.control.send('STOP')
+
+
+class SequenceItem():
+    """
+    Waveform point description:
+    number: point (1-10)
+    voltage
+    time: amount of seconds this point will be held
+    """
+    def __init__(self, number:int, voltage:float, time:int):
+        """
+        :param number: 1-10
+        :param voltage: 0.0 - 36.40V
+        :param time: 0s - 1200s
+        """
+        self.number = number
+        self.voltage = voltage #V
+        self.time = time #s
+
+    @classmethod
+    def from_resp(cls, number, resp):
+        res = resp.split(';')
+        return SequenceItem(number, res[0]/100, res[1])
+
+    def to_cmd(self):
+        return "SWFP{:02}{:04}{:04}".format(
+            self.number,
+            int(self.voltage*100),
+            int(self.time)
+        )
+
+    @classmethod
+    def from_csv(cls, line):
+        res = line.split(';')
+        return SequenceItem(int(res[0]), float(res[1]), int(res[2]))
+
+    def to_csv(self):
+        return "{};{:.2f};{}".format(self.number, self.voltage, self.time)
 
 

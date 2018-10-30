@@ -1,5 +1,5 @@
 from unittest import TestCase
-from ssp_9081.ssp_9081_interfaces import SSP_9081_INTERFACE
+from ssp_9081.interfaces import SSP_9081_INTERFACE
 from ssp_9081.control import SSP_9081
 
 class SSP_9081_Test(SSP_9081_INTERFACE):
