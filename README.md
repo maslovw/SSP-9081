@@ -1,6 +1,8 @@
 # SSP-9081
 Python control over Manson SSP-9081 Power Source 
 
+![SSP-9081_FrontPanel](https://github.com/maslovw/SSP-9081/blob/master/doc/front_panel.png)
+
 # Installation
 `pip install .`
 
