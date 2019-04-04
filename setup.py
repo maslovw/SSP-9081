@@ -1,9 +1,22 @@
 from setuptools import setup
+import re
+
+
+version = re.search(
+    '^__version__\s*=\s*"(.*)"',
+    open('ssp_9081/bin/ssp9081.py').read(),
+    re.M
+    ).group(1)
+
+
+with open("README.md", "rb") as f:
+    long_descr = f.read().decode("utf-8")
 
 setup(
-    name='ssp_9081',
-    version='1.0.0-dev',
+    name='ssp-9081',
+    version=version,
     packages=['ssp_9081'],
+    entry_points={"console_scripts": ['ssp9081 = ssp_9081.bin.ssp9081:main']},
     install_requires=['pyserial>=3.3'],
     python_requires='>3.5',
     url='https://github.com/maslovw/SSP-9081',
