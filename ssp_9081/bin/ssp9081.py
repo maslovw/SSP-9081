@@ -3,13 +3,19 @@ __version__ = "1.0.11"
 
 # import ssp_9081
 import argparse
+import time
 import os
 
 from ssp_9081.interfaces import SSP_9081_Serial
 from ssp_9081 import SSP_9081
 
+RET_OK = 0
+RET_TIMEOUT = 1
+RET_WRONG_SETTINGS = 2
 
 def main():
+    ret_code = RET_OK
+
     env_port = os.environ.get('SSP_9081', None)
     parser = argparse.ArgumentParser(description='Script to control SSP_9081 via serial(USB) interface'
                                                  'ssp9081 --off -u=12 --on:  will turnoff the output, set 12V and turn the '
@@ -32,6 +38,10 @@ def main():
     parser.add_argument('-off', '--off',
                         action='store_true',
                         help='set to turn off the power, first action to execute if specified')
+    parser.add_argument('--waitU',
+                        default=None,
+                        type=float,
+                        help='wait for the setU action to be applied with timeout, --waitU=0 to wait without timeout')
     parser.add_argument('--getU',
                         action='store_true',
                         help='print Voltage')
@@ -50,7 +60,7 @@ def main():
 
     if args.port is None:
         print("Error: Port is not specified (can use ENV_VAR 'SSP_9081')")
-        exit(1)
+        exit(RET_WRONG_SETTINGS)
 
     com = SSP_9081_Serial(args.port)
     power = SSP_9081(com)
@@ -79,5 +89,24 @@ def main():
     if args.hwversion:
         print("Version: ", power.getVersion())
 
+    if args.waitU is not None and args.setU is not None:
+        start_time = time.time()
+        import math
+        while True:
+            U = power.getU()
+            if math.isclose(args.setU, U, abs_tol=0.5):
+                print("U = ", U)
+                print(time.time() - start_time, 's')
+                break
+            if args.waitU > 0.0:
+                if time.time() - start_time >= args.waitU:
+                    ret_code = RET_TIMEOUT
+                    print("U = ", U)
+                    print("Timeout")
+                    break
+            time.sleep(0.5)
+
     power.close()
+
+    exit(ret_code)
 
