@@ -1,5 +1,5 @@
 #!python3
-__version__ = "1.0.11"
+__version__ = "1.0.12"
 
 # import ssp_9081
 import argparse
