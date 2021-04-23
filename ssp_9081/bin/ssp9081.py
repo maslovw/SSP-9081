@@ -42,6 +42,21 @@ def main():
                         default=None,
                         type=float,
                         help='wait for the setU action to be applied with timeout, --waitU=0 to wait without timeout')
+    parser.add_argument('--setWaveForm',
+                        type=str,
+                        default=None,
+                        help='waveform csv file: (step,voltage,time)')
+    parser.add_argument('--setWaveFormCycleNumber',
+                        type=int,
+                        help='''Set the waveform cycle number
+                        amount of times given waveform will perform
+                        cycleNum: 0 -> unlimited times''')
+    parser.add_argument('--startWaveForm',
+                        action='store_true',
+                        help='start waveform')
+    parser.add_argument('--stopWaveForm',
+                        action='store_true',
+                        help='stop waveform')
     parser.add_argument('--getU',
                         action='store_true',
                         help='print Voltage')
@@ -85,6 +100,20 @@ def main():
 
     if args.on:
         print("setOn: ", power.setOut(True))
+    
+    if args.setWaveForm is not None:
+        print("setWaveForm: ", power.waveForm.loadCSV(args.setWaveForm))
+
+    if args.setWaveFormCycleNumber is not None:
+        print("setWaveFormCycleNumber: ", power.waveForm.setCycleNumber(args.setWaveFormCycleNumber))
+        
+    if args.startWaveForm:
+        if not power.getOut():
+            print("setOn: ", power.setOut(True))
+        print("setWaveFormOn: ", power.waveForm.start())
+    
+    if args.stopWaveForm:
+        print("setWaveFormOff: ", power.waveForm.stop())
 
     if args.hwversion:
         print("Version: ", power.getVersion())

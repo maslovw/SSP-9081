@@ -222,6 +222,25 @@ class SSP_9081():
         def stop(self):
             return self.control.send('STOP')
 
+        def loadCSV(self, filename):
+            """
+            loadCSV: format: step(1-10),voltage(0.0 - 36.40V),time(0s - 1200s)
+            Example:
+            1,12.0,5
+            2,2.4,10
+            """
+            import csv
+            max_step = 2
+            ret = []
+            with open(filename) as csv_file:
+                csv_reader = csv.reader(csv_file, delimiter=',')
+                for line in csv_reader:
+                    self.control.logger.debug(';'.join(line))
+                    ret += [self.setStep(SequenceItem.from_csv(';'.join(line)))]
+                    max_step = max(max_step, int(line[0]))
+            ret += [self.setPointsToRun(max_step)]
+            self.control.logger.debug('setPointsToRun {}'.format(max_step))
+            return ret
 
 class SequenceItem():
     """
@@ -243,7 +262,7 @@ class SequenceItem():
     @classmethod
     def from_resp(cls, number, resp):
         res = resp.split(';')
-        return SequenceItem(number, res[0]/100, res[1])
+        return SequenceItem(number, int(res[0])/100, res[1])
 
     def to_cmd(self):
         return "SWFP{:02}{:04}{:04}".format(
