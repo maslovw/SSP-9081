@@ -27,8 +27,11 @@ print(power.getPower())
 ## command line
 ```bash
 ssp9081 --help
-usage: ssp9081 [-h] [-p PORT] [-u SETU] [-i SETI] [-on] [-off] [--getU]
-               [--getI] [--getOut] [--hwversion]
+usage: ssp9081 [-h] [-p PORT] [-u SETU] [-i SETI] [-on] [-off] [--waitU WAITU]
+               [--setWaveForm SETWAVEFORM]
+               [--setWaveFormCycleNumber SETWAVEFORMCYCLENUMBER]
+               [--startWaveForm] [--stopWaveForm] [--getU] [--getI] [--getOut]
+               [--hwversion]
 
 Script to control SSP_9081 via serial(USB) interfacessp9081 --off -u=12 --on:
 will turnoff the output, set 12V and turn the power on
@@ -42,6 +45,15 @@ optional arguments:
   -on, --on             set to turn on the power, last action to execute
   -off, --off           set to turn off the power, first action to execute if
                         specified
+  --waitU WAITU         wait for the setU action to be applied with timeout,
+                        --waitU=0 to wait without timeout
+  --setWaveForm SETWAVEFORM
+                        waveform csv file: (step,voltage,time)
+  --setWaveFormCycleNumber SETWAVEFORMCYCLENUMBER
+                        Set the waveform cycle number amount of times given
+                        waveform will perform cycleNum: 0 -> unlimited times
+  --startWaveForm       start waveform
+  --stopWaveForm        stop waveform
   --getU                print Voltage
   --getI                print Current
   --getOut              print if the power is on or off
@@ -68,4 +80,14 @@ getI:  1.456
 
 >> ssp9081 --hwversion
 Version:  Rev1.2
+
+
+>> ssp9081 --setWaveForm test.csv
+setWaveForm:  [(True, None), (True, None), (False, None), (True, None), (True, None), (True, None), (True, None)]
+
+>> ssp9081 --startWaveForm
+setOn:  True #if power was off
+setWaveFormOn:  (True, None)
+
+
 ```
