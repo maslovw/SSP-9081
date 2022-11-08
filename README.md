@@ -97,8 +97,16 @@ step(1-10), voltage(0.0 - 36.40V), time(0s - 1200s)
 
 Example:
 ```
-1,12.0,5
-2,2.4,10
+1,14.0,0¬
+2,3.8,5¬
+3,4.0,10¬
+4,12.0,10¬
+5,12.0,20¬
 ```
-- Step 1: set 12V during 5sec 
-- Step 2: set 2.4V during 10 sec
+![SSP-9081_WaveForm example](https://github.com/maslovw/SSP-9081/blob/master/doc/WaveFormExample.jpg)
+
+- Step 1: set 14V immidiately
+- Step 2: set 3.8V during 5 sec
+- Step 3: set 4V during 10 sec
+- Step 4: set 12V during 10 sec
+- Step 5: pause 12V for 20 sec
