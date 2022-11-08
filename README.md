@@ -106,7 +106,7 @@ Example:
 Command: `ssp9081 --setWaveForm example.csv --setWaveFormCycleNumber 1 --startWaveForm`
 will trigger this profile in SSP9081
 
-![SSP-9081_WaveForm example](https://github.com/maslovw/SSP-9081/blob/master/doc/WaveFormExample.jpg)
+![SSP-9081_WaveForm example](https://github.com/maslovw/SSP-9081/blob/master/doc/waveForm.jpg)
 
 - Step 1: set 14V immidiately
 - Step 2: set 3.8V immidiately
