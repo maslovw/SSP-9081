@@ -103,10 +103,15 @@ Example:
 4,12.0,10
 5,12.0,20
 ```
+Command: `ssp9081 --setWaveForm example.csv --setWaveFormCycleNumber 1 --startWaveForm`
+will trigger this profile in SSP9081
+
 ![SSP-9081_WaveForm example](https://github.com/maslovw/SSP-9081/blob/master/doc/WaveFormExample.jpg)
 
 - Step 1: set 14V immidiately
-- Step 2: set 3.8V during 5 sec
-- Step 3: set 4V during 10 sec
+- Step 2: set 3.8V immidiately
+- Step 3: set 4V during 5 sec
 - Step 4: set 12V during 10 sec
-- Step 5: pause 12V for 20 sec
+- Step 5: pause 12V for 10 sec
+- Step 6: set 14V during 20 sec (falling to Step1)
+- Switch off power (if `--setWaveFormCycleNumber 1` is specified, otherwise continue to Step2)
