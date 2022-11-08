@@ -97,11 +97,11 @@ step(1-10), voltage(0.0 - 36.40V), time(0s - 1200s)
 
 Example:
 ```
-1,14.0,0¬
-2,3.8,5¬
-3,4.0,10¬
-4,12.0,10¬
-5,12.0,20¬
+1,14.0,0
+2,3.8,5
+3,4.0,10
+4,12.0,10
+5,12.0,20
 ```
 ![SSP-9081_WaveForm example](https://github.com/maslovw/SSP-9081/blob/master/doc/WaveFormExample.jpg)
 
