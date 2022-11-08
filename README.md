@@ -88,6 +88,17 @@ setWaveForm:  [(True, None), (True, None), (False, None), (True, None), (True, N
 >> ssp9081 --startWaveForm
 setOn:  True #if power was off
 setWaveFormOn:  (True, None)
-
-
 ```
+
+### WaveForm 
+
+#### CSV Format
+step(1-10), voltage(0.0 - 36.40V), time(0s - 1200s)
+
+Example:
+```
+1,12.0,5
+2,2.4,10
+```
+- Step 1: set 12V during 5sec 
+- Step 2: set 2.4V during 10 sec
