@@ -5,7 +5,7 @@ __version__ = "1.0.13"
 import argparse
 import time
 import os
-
+import logging
 from ssp_9081.interfaces import SSP_9081_Serial
 from ssp_9081 import SSP_9081
 
@@ -69,16 +69,27 @@ def main():
     parser.add_argument('--hwversion',
                         action='store_true',
                         help='print version returned by SSP_9081')
+    parser.add_argument('--verbose',
+                        action='store_true',
+                        help='DEBUG Logging')
 
 
     args = parser.parse_args()
+
+    loglevel = logging.CRITICAL
+
+    if args.verbose:
+        logging.basicConfig(level=logging.DEBUG)
+        loglevel = logging.DEBUG
+    else:
+        logging.basicConfig(level=logging.CRITICAL)
 
     if args.port is None:
         print("Error: Port is not specified (can use ENV_VAR 'SSP_9081')")
         exit(RET_WRONG_SETTINGS)
 
     com = SSP_9081_Serial(args.port)
-    power = SSP_9081(com)
+    power = SSP_9081(com, loglevel)
 
     if args.getOut:
         print("Out: ", power.getOut())
@@ -100,18 +111,18 @@ def main():
 
     if args.on:
         print("setOn: ", power.setOut(True))
-    
+
     if args.setWaveForm is not None:
         print("setWaveForm: ", power.waveForm.loadCSV(args.setWaveForm))
 
     if args.setWaveFormCycleNumber is not None:
         print("setWaveFormCycleNumber: ", power.waveForm.setCycleNumber(args.setWaveFormCycleNumber))
-        
+
     if args.startWaveForm:
         if not power.getOut():
             print("setOn: ", power.setOut(True))
         print("setWaveFormOn: ", power.waveForm.start())
-    
+
     if args.stopWaveForm:
         print("setWaveFormOff: ", power.waveForm.stop())
 
@@ -134,8 +145,6 @@ def main():
                     print("Timeout")
                     break
             time.sleep(0.5)
-
-    power.close()
 
     exit(ret_code)
 

@@ -15,6 +15,7 @@ class SSP_9081():
         self.logger.setLevel(logLevel)
 
     def open(self, **kwargs):
+        self.logger.debug('open')
         self.connection.open(**kwargs)
 
     def close(self):
@@ -31,7 +32,9 @@ class SSP_9081():
         """
         self.logger.debug('send: {}'.format(cmd))
         self.connection.send(cmd)
-        return self.connection.recv()
+        ret = self.connection.recv()
+        self.logger.debug('recv: {}'.format(ret))
+        return ret
 
 
     def getUI(self) -> (float, float):
